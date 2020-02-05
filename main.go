@@ -22,7 +22,7 @@ func main() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "9443" //localhost
+		port = "9000" //localhost
 	}
 
 	fmt.Println(port)
