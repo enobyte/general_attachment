@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"general_attachment/controllers"
-	"general_attachment/utils"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
@@ -14,11 +13,7 @@ import (
 func main() {
 	router := mux.NewRouter()
 
-	router.HandleFunc("/", func(writer http.ResponseWriter, request *http.Request) {
-		utils.Respond(writer, utils.Message(200, true, "General Purpose"))
-	}).Methods("POST")
-
-	router.HandleFunc("/api/login", controllers.UploadFile).Methods("POST")
+	router.HandleFunc("/api/upload_file", controllers.UploadFile).Methods("POST")
 
 	port := os.Getenv("PORT")
 	if port == "" {

@@ -14,9 +14,10 @@ import (
 var UploadFile = func(w http.ResponseWriter, r *http.Request) {
 	user := &models.AttachmentModel{}
 
-	r.ParseMultipartForm(10 << 20)
+	_ = r.ParseMultipartForm(10 << 20)
 	file, handler, err := r.FormFile("claim_doc")
-	typeAttach := r.FormValue("type")
+	id := r.FormValue("id")
+	//fileName := r.FormValue("file_name")
 	payorCode := r.FormValue("payor_code")
 	typeFile := r.FormValue("type_file")
 
@@ -30,7 +31,7 @@ var UploadFile = func(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Uploaded File: %+v\n", handler.Filename)
 	fmt.Printf("File Size: %+v\n", handler.Size)
 	fmt.Printf("MIME Header: %+v\n", handler.Header)
-	tempFile, err := ioutil.TempFile("/usr/share/nginx/html/claimrembursement", strings.Trim(payorCode, " ")+"_*.png")
+	tempFile, err := ioutil.TempFile("/usr/share/nginx/html/claimrembursement", strings.Split(handler.Filename, ".")[0]+"_*.png")
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -39,14 +40,19 @@ var UploadFile = func(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	tempFile.Chmod(0755)
+	_ = tempFile.Chmod(0755)
 	if err != nil {
 		log.Println(err)
 	}
-	tempFile.Write(fileBytes)
+	_, err = tempFile.Write(fileBytes)
 
-	user = models.InsertMetaAttachment(typeAttach, filepath.Base(tempFile.Name()), payorCode, typeFile)
-	resp := utils.Message(utils.SuccesReq(), true, "data uploaded")
-	resp["data"] = user
-	utils.Respond(w, resp)
+	if err != nil {
+		resp := utils.Message(utils.BadReq(), false, "uploaded failed", nil)
+		utils.Respond(w, resp)
+	} else {
+		user = models.InsertMetaAttachment(id, payorCode, typeFile, filepath.Base(tempFile.Name()))
+		resp := utils.Message(utils.SuccesReq(), true, "data uploaded", user)
+		utils.Respond(w, resp)
+	}
+
 }
