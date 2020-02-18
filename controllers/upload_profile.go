@@ -23,7 +23,6 @@ var UploadFile = func(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		fmt.Println("Error Retrieving the File")
-		fmt.Println(err)
 		return
 	}
 	defer file.Close()
