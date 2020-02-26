@@ -89,7 +89,7 @@ var UploadPhotoProfile = func(w http.ResponseWriter, r *http.Request) {
 		resp := utils.Message(utils.BadReq(), false, "uploaded failed", nil)
 		utils.Respond(w, resp)
 	} else {
-		imageUrl := "http://103.107.103.56:8080/claimrembursement/" + filepath.Base(tempFile.Name())
+		imageUrl := "http://103.107.103.56:8080/profile/" + filepath.Base(tempFile.Name())
 		resp := utils.Message(utils.SuccesReq(), true, "data uploaded", map[string]interface{}{"url": imageUrl})
 		utils.Respond(w, resp)
 	}
