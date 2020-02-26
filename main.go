@@ -14,6 +14,7 @@ func main() {
 	router := mux.NewRouter()
 
 	router.HandleFunc("/api/upload_file", controllers.UploadFile).Methods("POST")
+	router.HandleFunc("/api/update_pp", controllers.UploadPhotoProfile).Methods("POST")
 
 	port := os.Getenv("PORT")
 	if port == "" {
