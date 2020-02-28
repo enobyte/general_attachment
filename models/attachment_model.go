@@ -21,7 +21,7 @@ type FileData struct {
 }
 
 func InsertMetaAttachment(id_attach string, payorCode string, typeFile string, fileName string) *AttachmentModel {
-	baseUrl := "http://103.107.103.56:8080/claimrembursement/"
+	baseUrl := "https://103.107.103.56/claimrembursement/"
 	attachmentModel := &AttachmentModel{}
 	fileData := []FileData{{Filename: fileName, Url: baseUrl + fileName}}
 	outputFile, err := json.MarshalIndent(fileData, "", " ")
