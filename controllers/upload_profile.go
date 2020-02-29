@@ -95,3 +95,43 @@ var UploadPhotoProfile = func(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
+
+var UploadGeneralPurpose = func(w http.ResponseWriter, r *http.Request) {
+
+	_ = r.ParseMultipartForm(10 << 20)
+	file, handler, err := r.FormFile("image")
+
+	if err != nil {
+		fmt.Println("Error Retrieving the File")
+		return
+	}
+	defer file.Close()
+
+	fmt.Printf("Uploaded File: %+v\n", handler.Filename)
+	fmt.Printf("File Size: %+v\n", handler.Size)
+	fmt.Printf("MIME Header: %+v\n", handler.Header)
+	tempFile, err := ioutil.TempFile("/home/public/genasset", strings.Split(handler.Filename, ".")[0]+"_*.png")
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer tempFile.Close()
+	fileBytes, err := ioutil.ReadAll(file)
+	if err != nil {
+		fmt.Println(err)
+	}
+	_ = tempFile.Chmod(0755)
+	if err != nil {
+		log.Println(err)
+	}
+	_, err = tempFile.Write(fileBytes)
+
+	if err != nil {
+		resp := utils.Message(utils.BadReq(), false, "uploaded failed", nil)
+		utils.Respond(w, resp)
+	} else {
+		imageUrl := "https://103.107.103.56/genasset/" + filepath.Base(tempFile.Name())
+		resp := utils.Message(utils.SuccesReq(), true, "data uploaded", map[string]interface{}{"url": imageUrl})
+		utils.Respond(w, resp)
+	}
+
+}
