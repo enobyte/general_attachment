@@ -110,7 +110,7 @@ var UploadGeneralPurpose = func(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Uploaded File: %+v\n", handler.Filename)
 	fmt.Printf("File Size: %+v\n", handler.Size)
 	fmt.Printf("MIME Header: %+v\n", handler.Header)
-	tempFile, err := ioutil.TempFile("/home/public/genasset", strings.Split(handler.Filename, ".")[0]+"_*.png")
+	tempFile, err := ioutil.TempFile("/home/public/genasset", strings.Split(handler.Filename, ".")[0]+"_*."+strings.Split(handler.Filename, ".")[1])
 	if err != nil {
 		fmt.Println(err)
 	}
